@@ -13,13 +13,19 @@ from .models import UrlLink
 def index(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        while True:
-            randomString = ''.join(choices(string.ascii_lowercase + string.digits, k=8))
-            if not UrlLink.objects.filter(short_url=randomString).exists():
-                break
+        
+        if UrlLink.objects.filter(url=data['url']).exists():
+            randomString = UrlLink.objects.get(url=data['url']).short_url
+        else:
+            while True:
+                randomString = ''.join(choices(string.ascii_lowercase + string.digits, k=8))
+                if not UrlLink.objects.filter(short_url=randomString).exists():
+                    break
+            
+            l = UrlLink(url=data.get('url'), short_url=randomString)
+            l.save()
 
-        l = UrlLink(url=data.get('url'), short_url=randomString)
-        l.save()
+        request.session[data.get('url')] = randomString
 
         return JsonResponse({
             "short_url": randomString

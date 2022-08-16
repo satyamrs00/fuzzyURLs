@@ -20,5 +20,10 @@
         </div>
         <div id="short-url">
         </div>
+        <div>
+            {% for key , value in request.session.items %}
+                <div>{{key}}   -    {{value}}</div>
+            {% endfor %}
+        </div>
     </body>
 </html>
