@@ -1,0 +1,9 @@
+body {
+    min-height: 100vh;
+}
+/* body > .row {
+    min-height: 100vh;
+} */
+.d-none.d-lg-block {
+    min-height: 100%;
+}

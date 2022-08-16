@@ -1,3 +1,4 @@
+from operator import truediv
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect
@@ -16,9 +17,11 @@ def index(request):
         
         if UrlLink.objects.filter(url=data['url']).exists():
             randomString = UrlLink.objects.get(url=data['url']).short_url
+            toappend = False
         else:
             while True:
                 randomString = ''.join(choices(string.ascii_lowercase + string.digits, k=8))
+                toappend = True
                 if not UrlLink.objects.filter(short_url=randomString).exists():
                     break
             
@@ -28,7 +31,8 @@ def index(request):
         request.session[data.get('url')] = randomString
 
         return JsonResponse({
-            "short_url": randomString
+            "short_url": randomString,
+            "append" : toappend
         })
     return render(request, 'url/index.html')
 
